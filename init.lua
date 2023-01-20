@@ -59,6 +59,9 @@ local config = {
                         ui_notifications_enabled = true, -- disable notifications when toggling UI elements
                         heirline_bufferline = false, -- enable new heirline based bufferline (requires :PackerSync after changing)
                 },
+                o = {
+                        wrap = true
+                }
         },
         -- If you need more control, you can use the function()...end notation
         -- options = function(local_vim)
@@ -84,7 +87,7 @@ local config = {
                 "    ██  ██ ██  ██  ██  ██ ██  ██  ██",
                 "    ██   ████   ████   ██ ██      ██",
         },
-
+        -- write another comment
         -- Default theme configuration
         default_theme = {
                 -- Modify the color palette for the default theme
@@ -258,7 +261,7 @@ local config = {
                         --   end,
                         -- },
                         --
-                        -- I wrote the following and it doesn't work. See https://github.com/AstroNvim/AstroNvim/issues/917
+                        -- This should support AstroNvim v3. See https://github.com/AstroNvim/AstroNvim/issues/917
                         -- ["neovim/neovim-lspconfig"] = {
                         --         dependencies = {
                         --                 ["tamago324/nlsp-settings.nvim"] = {
@@ -273,7 +276,41 @@ local config = {
                         --
                         --         }
                         -- }
-
+                        -- Reference setup: https://github.com/AstroNvim/AstroNvim/issues/1129
+                        ["zbirenbaum/copilot.lua"] = {
+                                cmd = "Copilot",
+                                event = "InsertEnter",
+                                config = function()
+                                        vim.schedule(function()
+                                                require("copilot").setup({
+                                                        -- per https://github.com/zbirenbaum/copilot-cmp/tree/b732a58ac8b7287b981cd9f0d9c0f61e5e9d5760#install
+                                                        suggestion = {
+                                                                enabled = true,
+                                                                auto_trigger = true,
+                                                                keymap = {
+                                                                        accept = "<C-l>",
+                                                                        next = "<C-j>",
+                                                                        prev = "<C-k>",
+                                                                        dismiss = "<C-e>",
+                                                                }
+                                                        },
+                                                })
+                                        end, 100)
+                                        -- require("copilot").setup({ suggestion = { auto_trigger = true } })
+                                end,
+                        },
+                        ["zbirenbaum/copilot-cmp"] = {
+                                after = { "nvim-cmp", "copilot.lua" },
+                                config = function()
+                                        astronvim.add_cmp_source({
+                                                name = "copilot",
+                                                priority = 999,
+                                                max_item_count = 3,
+                                                keyword_length = 2
+                                        })
+                                        require("copilot_cmp").setup()
+                                end
+                        },
                         ["tamago324/nlsp-settings.nvim"] = {
                                 module = "nlspsettings",
                                 config = function()
@@ -404,6 +441,9 @@ local config = {
                 --     ["~/%.config/foo/.*"] = "fooscript",
                 --   },
                 -- }
+                -- Reference setup: https://github.com/AstroNvim/AstroNvim/issues/1129#issuecomment-1283706965
+                local copilot_options = { silent = true, expr = true, script = true }
+                vim.api.nvim_set_keymap("i", "<C-cr>", "Copilot#suggestion#accept", copilot_options)
         end,
 }
 
