@@ -58,6 +58,7 @@ local config = {
                         icons_enabled = true, -- disable icons in the UI (disable if no nerd font is available, requires :PackerSync after changing)
                         ui_notifications_enabled = true, -- disable notifications when toggling UI elements
                         heirline_bufferline = false, -- enable new heirline based bufferline (requires :PackerSync after changing)
+                        neovide_scale_factor = 1.15,
                 },
                 o = {
                         wrap = true
@@ -167,6 +168,11 @@ local config = {
                 mappings = {
                         n = {
                                 -- ["<leader>lf"] = false -- disable formatting keymap
+                                ["<C++>"] = function() vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * 1.15 end,
+                                ["<C-->"] = function()
+                                        vim.g.neovide_scale_factor = vim.g.neovide_scale_factor *
+                                            (1 / 1.15)
+                                end,
                         },
                 },
                 -- add to the global LSP on_attach function
