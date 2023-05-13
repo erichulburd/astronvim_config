@@ -20,6 +20,10 @@ return {
     ["<leader>b"] = { name = "Buffers" },
     -- quick save
     -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
+    ["<C++>"] = function() vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * 1.15 end,
+    ["<C-->"] = function()
+      vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * (1 / 1.15)
+    end,
   },
   t = {
     -- setting a mapping to false will disable it

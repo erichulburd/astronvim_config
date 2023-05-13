@@ -48,6 +48,10 @@ return {
       --   return true
       -- end
     },
+    -- setup_handlers = function(server, opts)
+    --   require "nlspsettings"
+    --   require("lspconfig")[server].setup(opts)
+    -- end,
     -- enable servers that you already have installed without mason
     servers = {
       -- "pyright"
@@ -81,5 +85,9 @@ return {
     --     ["~/%.config/foo/.*"] = "fooscript",
     --   },
     -- }
+    -- Set up Copilot keybindings
+    -- reference: https://github.com/AstroNvim/AstroNvim/issues/1129#issuecomment-1283706965
+    local copilot_options = { silent = true, expr = true, script = true }
+    vim.api.nvim_set_keymap("i", "<C-cr>", "copilot#Accept(<Tab>)", copilot_options)
   end,
 }
