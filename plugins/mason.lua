@@ -27,6 +27,11 @@ return {
     "jay-babu/mason-nvim-dap.nvim",
     -- overrides `require("mason-nvim-dap").setup(...)`
     opts = function(_, opts)
+      -- https://github.com/rcarriga/nvim-dap-ui/blob/85b16ac2309d85c88577cd8ee1733ce52be8227e/lua/dapui/config/highlights.lua
+      -- Also see Discord post: https://discord.com/channels/939594913560031363/1116858022547955712
+      vim.cmd([[
+      hi DapUIVariable guifg=#A9FF68
+      ]]);
       -- add more things to the ensure_installed table protecting against community packs modifying it
       opts.ensure_installed = require("astronvim.utils").list_insert_unique(opts.ensure_installed, {
         -- "python",
@@ -35,7 +40,8 @@ return {
       -- https://github.com/simrat39/rust-tools.nvim/wiki/Debugging
       -- https://github.com/simrat39/rust-tools.nvim/blob/71d2cf67b5ed120a0e31b2c8adb210dd2834242f/lua/rust-tools/dap.lua
       -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#ccrust-via-lldb-vscode
-
+      -- There is also a tutorial on how to use the nvim-dap interface here:
+      -- https://www.youtube.com/watch?v=lEMZnrC-ST4&t=280s
       local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.9.2/'
       local codelldb_path = extension_path .. 'adapter/codelldb'
       local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
@@ -60,13 +66,30 @@ return {
           request = 'launch',
           -- program = "${workspaceFolder}/target/debug/${workspaceFolderBasename}",
           program = function()
-            path = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/${workspaceFolderBasename}',
-              'file')
+            path = vim.fn.input({
+              prompt = 'Path to executable: ',
+              default = vim.fn.getcwd() .. '/target/debug/${workspaceFolderBasename}',
+              completion = 'file'
+            })
             return path
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
-          -- args = { "${fileDirname}/../target/debug/${workspaceFolderBasename}" },
+          args = function()
+            local args = vim.fn.input({
+              prompt = 'Arguments (space-separated): ',
+              default = '',
+            })
+            if args ~= '' then
+              return vim.split(args, ' ', { trimempty = true })
+            else
+              return nil
+            end
+          end,
+          -- You can mimic verbose logging by setting `RUST_LOG=error,codelldb=debug`:
+          -- https://github.com/vadimcn/codelldb/blob/f4b6ad6dfc20a31da922146b78cbea9543997e5d/extension/novsc/adapter.ts#L42C5-L42C5
+          -- env = {},
+
           initCommands = function()
             -- Find out where to look for the pretty printer Python module
             local rustc_sysroot = vim.fn.trim(vim.fn.system('rustc --print sysroot'))
