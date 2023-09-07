@@ -66,6 +66,11 @@ return {
           request = 'launch',
           -- program = "${workspaceFolder}/target/debug/${workspaceFolderBasename}",
           program = function()
+            local path = vim.env.LLDB_PROGRAM_PATH;
+            if (path) then
+              return path;
+            end
+
             path = vim.fn.input({
               prompt = 'Path to executable: ',
               default = vim.fn.getcwd() .. '/target/debug/${workspaceFolderBasename}',
@@ -76,7 +81,11 @@ return {
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
           args = function()
-            local args = vim.fn.input({
+            local args = vim.env.LLDB_PROGRAM_ARGS;
+            if (args) then
+              return vim.split(args, ' ', { trimempty = true })
+            end
+            args = vim.fn.input({
               prompt = 'Arguments (space-separated): ',
               default = '',
             })

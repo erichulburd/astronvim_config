@@ -42,24 +42,33 @@ return {
               dismiss = "<C-e>",
             }
           },
+          filetypes = {
+            -- for some reason copilot does not play well with ccls. When both are enabled, the editor emits
+            -- the error "warning: multiple different client offset_encodings detected for buffer, this is not supported yet"
+            -- see https://github.com/neovim/nvim-lspconfig/issues/2709
+            cpp = false,
+            c = false,
+            cuda = false,
+            opencl = false,
+          }
         })
       end) -- 100
       -- require("copilot").setup({ suggestion = { auto_trigger = true } })
     end,
   },
-  {
-    "zbirenbaum/copilot-cmp",
-    after = { "nvim-cmp", "copilot.lua" },
-    config = function()
-      astronvim.add_cmp_source({
-        name = "copilot",
-        priority = 999,
-        max_item_count = 3,
-        keyword_length = 2
-      })
-      require("copilot_cmp").setup()
-    end
-  },
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   after = { "nvim-cmp", "copilot.lua" },
+  --   config = function()
+  --     astronvim.add_cmp_source({
+  --       name = "copilot",
+  --       priority = 999,
+  --       max_item_count = 3,
+  --       keyword_length = 2
+  --     })
+  --     require("copilot_cmp").setup()
+  --   end
+  -- },
   {
     "mfussenegger/nvim-dap-python",
     pin = true,
