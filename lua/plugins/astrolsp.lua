@@ -7,6 +7,12 @@ return {
   opts = function(plugin, opts)
     -- safely extend the servers list
     opts.servers = opts.servers or {}
+
+    vim.filetype.add({
+      extension = {
+        mojo = 'mojo'
+      }
+    })
     vim.list_extend(opts.servers, {
       "mojo",
     })
