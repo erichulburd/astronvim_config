@@ -11,7 +11,13 @@ return {
     vim.filetype.add({
       extension = {
         mojo = 'mojo'
-      }
+      },
+    })
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "mojo",
+        callback = function()
+            vim.opt_local.commentstring = "# %s"
+        end
     })
     vim.list_extend(opts.servers, {
       "mojo",
