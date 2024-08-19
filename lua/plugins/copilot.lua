@@ -37,6 +37,6 @@ return {
         }
       })
     end) -- 100
-    -- require("copilot").setup({ suggestion = { auto_trigger = true } })
+    require("copilot").setup({ suggestion = { auto_trigger = true } })
   end,
 }
