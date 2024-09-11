@@ -9,6 +9,10 @@ return {
     filetypes = {
       markdown = true,
       help = true,
+      cpp = false,
+      c = false,
+      cuda = false,
+      opencl = false,
     },
   },
   event = "InsertEnter",
