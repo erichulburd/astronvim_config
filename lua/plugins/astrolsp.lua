@@ -38,7 +38,9 @@ return {
 
     local clangd_capabilities = vim.lsp.protocol.make_client_capabilities()
     clangd_capabilities.offsetEncoding = "utf-16"
-    opts.config.clangd = { capabilities = clangd_capabilities, cmd = { os.getenv("HOME") .. "/.build/" .. os.getenv("LLVM_TAG") .. "/bin/clangd" } }
+    local llvm_tag = os.getenv("LLVM_TAG")
+    if llvm_tag == nil then llvm_tag = os.getenv("DEFAULT_LLVM_TAG") end
+    opts.config.clangd = { capabilities = clangd_capabilities, cmd = { os.getenv("HOME") .. "/.build/" .. llvm_tag .. "/bin/clangd" } }
   
     -- See https://github.com/hrsh7th/cmp-nvim-lsp/issues/44#issuecomment-2096368152
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
