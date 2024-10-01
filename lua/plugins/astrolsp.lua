@@ -11,7 +11,9 @@ return {
 
     vim.filetype.add({
       extension = {
-        mojo = 'mojo'
+        mojo = 'mojo',
+        cxx = 'cpp',
+        cppm = 'cpp',
 
       },
     })
@@ -40,7 +42,11 @@ return {
     clangd_capabilities.offsetEncoding = "utf-16"
     local llvm_tag = os.getenv("LLVM_TAG")
     if llvm_tag == nil then llvm_tag = os.getenv("DEFAULT_LLVM_TAG") end
-    opts.config.clangd = { capabilities = clangd_capabilities, cmd = { os.getenv("HOME") .. "/.build/" .. llvm_tag .. "/bin/clangd" } }
+    opts.config.clangd = {
+      capabilities = clangd_capabilities,
+      cmd = { os.getenv("HOME") .. "/.build/" .. llvm_tag .. "/bin/clangd" },
+      filetypes = { "c", "cpp", "cppm", "cxx", "objc", "objcpp", "cuda" }
+    }
   
     -- See https://github.com/hrsh7th/cmp-nvim-lsp/issues/44#issuecomment-2096368152
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
