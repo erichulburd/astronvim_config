@@ -1,0 +1,21 @@
+{
+  "rust-analyzer.cargo.allFeatures": false,
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.checkOnSave": true,
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.procMacro.attributes.enable": true,
+  "rust-analyzer.files.excludeDirs": [
+    "target",
+    "node_modules",
+    ".git",
+    ".vscode",
+    ".idea",
+    ".cargo",
+    "dist",
+    "scratch",
+    ".venv",
+    "venv",
+    ".pytest_cache"
+  ]
+}
