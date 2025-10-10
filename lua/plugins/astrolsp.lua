@@ -3,11 +3,27 @@
 ---@type LazySpec
 return {
   "AstroNvim/astrolsp",
+  tag = "v3.2.1",
   -- enable servers that you already have installed without mason
   ---@type AstroLSPOpts
   opts = function(plugin, opts)
     -- safely extend the servers list
-    opts.servers = opts.servers or {}
+    opts.servers = opts.servers or {
+      rust_analyzer = function(server_opts)
+        -- See https://github.com/hrsh7th/cmp-nvim-lsp/issues/44#issuecomment-2096368152
+        -- local cmp_nvim_lsp = require("cmp_nvim_lsp")
+        -- local rust_analyzer_capabilities = cmp_nvim_lsp.default_capabilities()
+        -- rust_analyzer_capabilities.workspace = { didChangeWatchedFiles = { dynamicRegistration = true } }
+        -- opts.config.rust_analyzer = { capabilities = rust_analyzer_capabilities }
+
+        local capabilities = server_opts.capabilities
+        capabilities.workspace = capabilities.workspace or {}
+        capabilities.workspace.didChangeWatchedFiles = {
+          dynamicRegistration = true,
+        }
+        return server_opts
+      end
+    }
 
     vim.filetype.add({
       extension = {
@@ -47,11 +63,50 @@ return {
       cmd = { os.getenv("HOME") .. "/.build/" .. llvm_tag .. "/bin/clangd" },
       filetypes = { "c", "cpp", "cppm", "cxx", "objc", "objcpp", "cuda" }
     }
-  
-    -- See https://github.com/hrsh7th/cmp-nvim-lsp/issues/44#issuecomment-2096368152
-    -- local cmp_nvim_lsp = require("cmp_nvim_lsp")
-    -- local rust_analyzer_capabilities = cmp_nvim_lsp.default_capabilities()
-    -- rust_analyzer_capabilities.workspace = { didChangeWatchedFiles = { dynamicRegistration = true } }
-    -- opts.config.rust_analyzer = { capabilities = rust_analyzer_capabilities }
+
+    opts.mappings = {
+      n = {
+        gd = {
+          function()
+            vim.lsp.buf.type_definitions()
+          end,
+          desc = "Go to type definition",
+        }
+      }
+    }
+
+    -- add mappings
+    -- if opts.mappings.n.gd then
+    --   opts.mappings.n.gd[1] = function()
+    --     require("snacks.picker").lsp_definitions()
+    --   end
+    -- end
+    -- if opts.mappings.n.gI then
+    --   opts.mappings.n.gI[1] = function()
+    --     require("snacks.picker").lsp_implementations()
+    --   end
+    -- end
+    -- if opts.mappings.n.gy then
+    --   opts.mappings.n.gy[1] = function()
+    --     require("snacks.picker").lsp_type_definitions()
+    --   end
+    -- end
+    -- if opts.mappings.n["<Leader>lG"] then
+    --   opts.mappings.n["<Leader>lG"][1] = function()
+    --     require("snacks.picker").lsp_workspace_symbols()
+    --   end
+    -- end
+    -- if opts.mappings.n["<Leader>lR"] then
+    --   opts.mappings.n["<Leader>lR"][1] = function()
+    --     require("snacks.picker").lsp_references()
+    --   end
+    -- end
   end,
+  dependencies = {
+    {
+      "mason-org/mason-lspconfig.nvim",
+      tag = "v2.1.0"
+    },
+  }
+
 }

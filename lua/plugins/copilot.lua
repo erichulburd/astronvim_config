@@ -2,7 +2,7 @@ return {
   "zbirenbaum/copilot.lua",
   cmd = "Copilot",
   build = ":Copilot auth",
-  tag = "1.29.0",
+  commit = "92e08cd472653beaece28ad9c8508a851a613358",
   opts = {
     suggestion = { enabled = true },
     panel = { enabled = false },

@@ -1,5 +1,6 @@
 return {
   "neovim/nvim-lspconfig",
+  tag = "v2.5.0",
   dependencies = {
     {
       "tamago324/nlsp-settings.nvim", -- add the nlsp setting plugin
