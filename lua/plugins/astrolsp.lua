@@ -7,22 +7,37 @@ return {
   -- enable servers that you already have installed without mason
   ---@type AstroLSPOpts
   opts = function(plugin, opts)
+
     -- safely extend the servers list
     opts.servers = opts.servers or {
-      rust_analyzer = function(server_opts)
-        -- See https://github.com/hrsh7th/cmp-nvim-lsp/issues/44#issuecomment-2096368152
-        -- local cmp_nvim_lsp = require("cmp_nvim_lsp")
-        -- local rust_analyzer_capabilities = cmp_nvim_lsp.default_capabilities()
-        -- rust_analyzer_capabilities.workspace = { didChangeWatchedFiles = { dynamicRegistration = true } }
-        -- opts.config.rust_analyzer = { capabilities = rust_analyzer_capabilities }
-
-        local capabilities = server_opts.capabilities
-        capabilities.workspace = capabilities.workspace or {}
-        capabilities.workspace.didChangeWatchedFiles = {
-          dynamicRegistration = true,
+      -- rust_analyzer = function(server_opts)
+      --   -- See https://github.com/hrsh7th/cmp-nvim-lsp/issues/44#issuecomment-2096368152
+      --   -- local cmp_nvim_lsp = require("cmp_nvim_lsp")
+      --   -- local rust_analyzer_capabilities = cmp_nvim_lsp.default_capabilities()
+      --   -- rust_analyzer_capabilities.workspace = { didChangeWatchedFiles = { dynamicRegistration = true } }
+      --   -- opts.config.rust_analyzer = { capabilities = rust_analyzer_capabilities }
+      --
+      --   local capabilities = server_opts.capabilities
+      --   capabilities.workspace = capabilities.workspace or {}
+      --   capabilities.workspace.didChangeWatchedFiles = {
+      --     dynamicRegistration = true,
+      --   }
+      --
+      --   -- Use vim.tbl_deep_extend to safely merge your custom settings
+      --   -- with the default server_opts provided by AstroNvim.
+      --   -- 'force' ensures your new settings overwrite any existing ones.
+      --   server_opts.settings = vim.tbl_deep_extend("force",
+      --     server_opts.settings or {},
+      --     rust_analyzer_settings
+      --   )
+      --
+      --   return server_opts
+      -- end,
+      ruff = {
+        settings = {
+          format = { backend = "internal" }
         }
-        return server_opts
-      end
+      }
     }
 
     vim.filetype.add({
@@ -64,17 +79,6 @@ return {
       filetypes = { "c", "cpp", "cppm", "cxx", "objc", "objcpp", "cuda" }
     }
 
-    opts.mappings = {
-      n = {
-        gd = {
-          function()
-            vim.lsp.buf.type_definitions()
-          end,
-          desc = "Go to type definition",
-        }
-      }
-    }
-
     -- add mappings
     -- if opts.mappings.n.gd then
     --   opts.mappings.n.gd[1] = function()
@@ -103,10 +107,20 @@ return {
     -- end
   end,
   dependencies = {
-    {
-      "mason-org/mason-lspconfig.nvim",
-      tag = "v2.1.0"
-    },
+    -- {
+    --   "mason-org/mason-lspconfig.nvim",
+    --   tag = "v2.1.0"
+    -- },
+    -- {
+    --   "tamago324/nlsp-settings.nvim", -- add the nlsp setting plugin
+    --   opts = {
+    --     -- set the config table for the `setup()` call
+    --     config_home = vim.fn.stdpath "config" .. "/nlsp-settings",
+    --     local_settings_dir = ".nlsp-settings",
+    --     local_settings_root_markers_fallback = { ".git" },
+    --     append_default_schemas = true,
+    --     loader = "json",
+    --   },
+    -- },
   }
-
 }

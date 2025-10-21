@@ -8,9 +8,9 @@ return {
         n = {
           gd = {
             function()
-              vim.lsp.buf.type_definition()
+              vim.lsp.buf.definition()
             end,
-            desc = "Go to type definition",
+            desc = "Go to definition",
           },
         },
       },
